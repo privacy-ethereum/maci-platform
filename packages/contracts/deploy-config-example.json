@@ -77,10 +77,10 @@
     },
     "Tally": {
       "withPause": true,
-      "cooldownTime": "4838400",
       "maxCap": "10000000000000000000",
       "maxContribution": "5000000000000000000",
-      "payoutToken": "0x0000000000000000000000000000000000000000"
+      "payoutToken": "0x0000000000000000000000000000000000000000",
+      "depositWindow": "604800"
     }
   },
   "scroll_sepolia": {
@@ -160,10 +160,10 @@
     },
     "Tally": {
       "withPause": true,
-      "cooldownTime": "4838400",
       "maxCap": "10000000000000000000",
       "maxContribution": "5000000000000000000",
-      "payoutToken": "0x0000000000000000000000000000000000000000"
+      "payoutToken": "0x0000000000000000000000000000000000000000",
+      "depositWindow": "604800"
     }
   },
   "optimism": {
@@ -244,10 +244,10 @@
     },
     "Tally": {
       "withPause": true,
-      "cooldownTime": "4838400",
       "maxCap": "10000000000000000000",
       "maxContribution": "5000000000000000000",
-      "payoutToken": "0x0000000000000000000000000000000000000000"
+      "payoutToken": "0x0000000000000000000000000000000000000000",
+      "depositWindow": "604800"
     }
   },
   "arbitrum_sepolia": {
@@ -328,10 +328,10 @@
     },
     "Tally": {
       "withPause": true,
-      "cooldownTime": "4838400",
       "maxCap": "10000000000000000000",
       "maxContribution": "5000000000000000000",
-      "payoutToken": "0x0000000000000000000000000000000000000000"
+      "payoutToken": "0x0000000000000000000000000000000000000000",
+      "depositWindow": "604800"
     }
   },
   "localhost": {
@@ -412,10 +412,10 @@
     },
     "Tally": {
       "withPause": true,
-      "cooldownTime": "4838400",
       "maxCap": "10000000000000000000",
       "maxContribution": "5000000000000000000",
-      "payoutToken": "0x0000000000000000000000000000000000000000"
+      "payoutToken": "0x0000000000000000000000000000000000000000",
+      "depositWindow": "604800"
     }
   },
   "base_sepolia": {
@@ -496,10 +496,10 @@
     },
     "Tally": {
       "withPause": true,
-      "cooldownTime": "4838400",
       "maxCap": "10000000000000000000",
       "maxContribution": "5000000000000000000",
-      "payoutToken": "0x0000000000000000000000000000000000000000"
+      "payoutToken": "0x0000000000000000000000000000000000000000",
+      "depositWindow": "604800"
     }
   },
   "optimism_sepolia": {
@@ -585,10 +585,10 @@
     },
     "Tally": {
       "withPause": true,
-      "cooldownTime": "4838400",
       "maxCap": "10000000000000000000",
       "maxContribution": "5000000000000000000",
-      "payoutToken": "0x0000000000000000000000000000000000000000"
+      "payoutToken": "0x0000000000000000000000000000000000000000",
+      "depositWindow": "604800"
     }
   }
 }

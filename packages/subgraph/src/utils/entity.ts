@@ -111,12 +111,13 @@ export const createOrLoadRecipient = (
   return recipient;
 };
 
-export const createOrLoadTally = (tally: Bytes, poll: Bytes): Tally => {
+export const createOrLoadTally = (tally: Bytes, poll: Bytes, depositWindow: GraphBN): Tally => {
   let entity = Tally.load(tally);
 
   if (!entity) {
     entity = new Tally(tally);
     entity.poll = poll;
+    entity.depositWindow = depositWindow;
     entity.save();
   }
 

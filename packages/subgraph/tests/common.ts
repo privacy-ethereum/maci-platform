@@ -63,4 +63,8 @@ export function mockTallyContract(): void {
   createMockedFunction(DEFAULT_TALLY_ADDRESS, "poll", "poll():(address)").returns([
     ethereum.Value.fromAddress(DEFAULT_POLL_ADDRESS),
   ]);
+
+  createMockedFunction(DEFAULT_TALLY_ADDRESS, "depositWindow", "depositWindow():(uint256)").returns([
+    ethereum.Value.fromI32(604800), // 1 week in seconds
+  ]);
 }

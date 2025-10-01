@@ -107,6 +107,7 @@ type Poll @entity {
 
 type Tally @entity {
   id: Bytes! # tally address
+  depositWindow: BigInt! # uint256 - duration in seconds after poll ends for deposits
   results: [TallyResult!]! @derivedFrom(field: "tally")
   claims: [Claim!]! @derivedFrom(field: "tally")
   deposits: [Deposit!]! @derivedFrom(field: "tally")

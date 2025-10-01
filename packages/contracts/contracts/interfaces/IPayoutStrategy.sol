@@ -6,14 +6,14 @@ pragma solidity ^0.8.20;
 interface IPayoutStrategy {
   /// @notice Strategy initialization params
   struct StrategyInit {
-    /// @notice The cooldown duration for withdrawal extra funds
-    uint256 cooldownTime;
     /// @notice The max contribution amount
     uint256 maxContribution;
     /// @notice The max cap
     uint256 maxCap;
     /// @notice The payout token
     address payoutToken;
+    /// @notice The deposit window duration (in seconds) after poll ends
+    uint256 depositWindow;
   }
 
   /// @notice Claim params
@@ -36,9 +36,6 @@ interface IPayoutStrategy {
 
   /// @notice Total deposited amount
   function totalAmount() external view returns (uint256);
-
-  /// @notice The cooldown timeout
-  function cooldown() external view returns (uint256);
 
   /// @notice Deposit amount
   /// @param amount The amount

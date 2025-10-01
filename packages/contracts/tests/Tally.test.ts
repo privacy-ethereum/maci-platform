@@ -55,9 +55,9 @@ describe("Tally", () => {
 
   const maxRecipients = TALLY_RESULTS.tally.length;
 
-  const cooldownTime = 1_000;
   const metadataUrl = encodeBytes32String("url");
   const duration = 100;
+  const depositWindow = 1_000;
   const keypair = new Keypair();
 
   const emptyClaimParams = {
@@ -154,10 +154,10 @@ describe("Tally", () => {
 
     const receipt = await tallyContract
       .init({
-        cooldownTime,
         maxContribution: 1,
         maxCap: 1,
         payoutToken,
+        depositWindow,
       })
       .then((tx) => tx.wait());
 
@@ -186,10 +186,10 @@ describe("Tally", () => {
   it("should not allow non-owner to initialize tally", async () => {
     await expect(
       tally.connect(user).init({
-        cooldownTime,
         maxContribution: parseUnits("5", await payoutToken.decimals()),
         maxCap: parseUnits("10", await payoutToken.decimals()),
         payoutToken,
+        depositWindow,
       }),
     ).to.be.revertedWithCustomError(tally, "OwnableUnauthorizedAccount");
   });
@@ -197,10 +197,10 @@ describe("Tally", () => {
   it("should initialize tally properly", async () => {
     const receipt = await tally
       .init({
-        cooldownTime,
         maxContribution: parseUnits("5", await payoutToken.decimals()),
         maxCap: parseUnits("10", await payoutToken.decimals()),
         payoutToken,
+        depositWindow,
       })
       .then((tx) => tx.wait());
 
@@ -210,10 +210,10 @@ describe("Tally", () => {
   it("should not allow to initialize tally twice", async () => {
     await expect(
       tally.init({
-        cooldownTime,
         maxContribution: parseUnits("5", await payoutToken.decimals()),
         maxCap: parseUnits("10", await payoutToken.decimals()),
         payoutToken,
+        depositWindow,
       }),
     ).to.be.revertedWithCustomError(tally, "AlreadyInitialized");
   });
@@ -267,7 +267,7 @@ describe("Tally", () => {
   });
 
   it("should merge properly", async () => {
-    await timeTravel(cooldownTime + duration, owner);
+    await timeTravel(duration, owner);
 
     // eslint-disable-next-line @typescript-eslint/prefer-for-of
     for (let index = 0; index < TALLY_RESULTS.tally.length; index += 1) {
@@ -450,6 +450,9 @@ describe("Tally", () => {
   });
 
   it("should not claim funds for the project if proof generation is failed", async () => {
+    // Move past deposit window to allow claims
+    await timeTravel(duration + depositWindow, owner);
+
     const voteOptionTreeDepth = 3;
     const invalidProof = [
       [0n, 0n, 0n, 0n],
