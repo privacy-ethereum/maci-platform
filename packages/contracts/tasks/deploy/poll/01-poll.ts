@@ -141,6 +141,7 @@ deployment.deployTask(EDeploySteps.Poll, "Deploy poll").then((task) =>
     // get the empty ballot root
     const emptyBallotRoot = await pollContract.emptyBallotRoot();
 
+    const custodian = deployment.getDeployConfigField<string>(EContracts.Tally, "custodian", true);
     const maxContribution = deployment.getDeployConfigField<string>(EContracts.Tally, "maxContribution", true);
     const maxCap = deployment.getDeployConfigField<string>(EContracts.Tally, "maxCap", true);
     const depositWindow =
@@ -171,6 +172,7 @@ deployment.deployTask(EDeploySteps.Poll, "Deploy poll").then((task) =>
 
     await tallyContract
       .init({
+        custodian,
         maxContribution,
         payoutToken,
         maxCap,

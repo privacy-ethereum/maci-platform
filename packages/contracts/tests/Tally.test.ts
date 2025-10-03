@@ -46,10 +46,12 @@ describe("Tally", () => {
   let verifier: MockVerifier;
   let vkRegistry: VkRegistry;
   let owner: Signer;
+  let custodian: Signer;
   let user: Signer;
   let project: Signer;
 
   let ownerAddress: string;
+  let custodianAddress: string;
   let userAddress: string;
   let projectAddress: string;
 
@@ -73,9 +75,10 @@ describe("Tally", () => {
   };
 
   before(async () => {
-    [owner, user, project] = await getSigners();
-    [ownerAddress, userAddress, projectAddress] = await Promise.all([
+    [owner, custodian, user, project] = await getSigners();
+    [ownerAddress, custodianAddress, userAddress, projectAddress] = await Promise.all([
       owner.getAddress(),
+      custodian.getAddress(),
       user.getAddress(),
       project.getAddress(),
     ]);
@@ -154,6 +157,7 @@ describe("Tally", () => {
 
     const receipt = await tallyContract
       .init({
+        custodian: custodianAddress,
         maxContribution: 1,
         maxCap: 1,
         payoutToken,
@@ -167,6 +171,7 @@ describe("Tally", () => {
 
   it("should not allow to deposit/claim/addTallyResults before initialization", async () => {
     await expect(tally.deposit(1n)).to.be.revertedWithCustomError(tally, "NotInitialized");
+    await expect(tally.withdraw()).to.be.revertedWithCustomError(tally, "NotInitialized");
     await expect(tally.claim(emptyClaimParams)).to.be.revertedWithCustomError(tally, "NotInitialized");
     await expect(
       tally.addTallyResults({
@@ -186,6 +191,7 @@ describe("Tally", () => {
   it("should not allow non-owner to initialize tally", async () => {
     await expect(
       tally.connect(user).init({
+        custodian: custodianAddress,
         maxContribution: parseUnits("5", await payoutToken.decimals()),
         maxCap: parseUnits("10", await payoutToken.decimals()),
         payoutToken,
@@ -197,6 +203,7 @@ describe("Tally", () => {
   it("should initialize tally properly", async () => {
     const receipt = await tally
       .init({
+        custodian: custodianAddress,
         maxContribution: parseUnits("5", await payoutToken.decimals()),
         maxCap: parseUnits("10", await payoutToken.decimals()),
         payoutToken,
@@ -210,6 +217,7 @@ describe("Tally", () => {
   it("should not allow to initialize tally twice", async () => {
     await expect(
       tally.init({
+        custodian: custodianAddress,
         maxContribution: parseUnits("5", await payoutToken.decimals()),
         maxCap: parseUnits("10", await payoutToken.decimals()),
         payoutToken,
@@ -234,6 +242,14 @@ describe("Tally", () => {
     } finally {
       await tally.unpause().then((tx) => tx.wait());
     }
+  });
+
+  it("should not withdraw to custodian if deposit window is not over", async () => {
+    await expect(tally.withdraw()).to.be.revertedWithCustomError(tally, "DepositWindowNotClosed");
+  });
+
+  it("should not allow non-owner to withdraw funds", async () => {
+    await expect(tally.connect(user).withdraw()).to.be.revertedWithCustomError(tally, "OwnableUnauthorizedAccount");
   });
 
   it("should not allow non-owner to add tally results", async () => {
@@ -445,6 +461,30 @@ describe("Tally", () => {
     await payoutToken.approve(tally, amount).then((tx) => tx.wait());
 
     await expect(tally.deposit(amount)).to.be.revertedWithCustomError(tally, "DepositWindowClosed");
+  });
+
+  it("should withdraw to custodian after deposit window properly", async () => {
+    await timeTravel(1, owner);
+
+    const [contractBalance, initialCustodianBalance, totalAmount] = await Promise.all([
+      payoutToken.balanceOf(tally),
+      payoutToken.balanceOf(custodian),
+      tally.totalAmount(),
+    ]);
+
+    const tx = await tally.withdraw();
+    await tx.wait();
+
+    const [balance, custodianBalance, totalExtraFunds] = await Promise.all([
+      payoutToken.balanceOf(tally),
+      payoutToken.balanceOf(custodian),
+      tally.totalAmount(),
+    ]);
+
+    expect(balance).to.equal(0n);
+    expect(totalExtraFunds).to.equal(0n);
+    expect(initialCustodianBalance + totalAmount).to.equal(custodianBalance);
+    expect(contractBalance).to.equal(totalAmount);
   });
 
   it("should not allow to add tally results twice", async () => {

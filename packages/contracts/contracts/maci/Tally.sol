@@ -35,6 +35,9 @@ contract Tally is TallyBase, IPayoutStrategy, Pausable {
   /// @notice The voice credit factor (needed for allocated amount calculation)
   uint256 public voiceCreditFactor;
 
+  /// @notice The custodian address who should receive leftover funds if tallying and cooldown period are over
+  address public custodian;
+
   /// @notice The deposit window duration (in seconds) after poll ends
   uint256 public depositWindow;
 
@@ -139,6 +142,7 @@ contract Tally is TallyBase, IPayoutStrategy, Pausable {
     token = IERC20(params.payoutToken);
     maxCap = params.maxCap;
     depositWindow = params.depositWindow;
+    custodian = params.custodian;
     voiceCreditFactor = params.maxContribution / MAX_VOICE_CREDITS;
     voiceCreditFactor = voiceCreditFactor > 0 ? voiceCreditFactor : 1;
   }
@@ -158,6 +162,13 @@ contract Tally is TallyBase, IPayoutStrategy, Pausable {
     emit Deposited(msg.sender, amount);
 
     token.safeTransferFrom(msg.sender, address(this), amount);
+  }
+
+  /// @inheritdoc IPayoutStrategy
+  function withdraw() public override isInitialized onlyOwner afterDepositWindow {
+    uint256 totalFunds = token.balanceOf(address(this));
+
+    token.safeTransfer(custodian, totalFunds);
   }
 
   /// @inheritdoc IPayoutStrategy
