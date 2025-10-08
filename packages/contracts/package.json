@@ -54,6 +54,9 @@
     "submitOnChain": "hardhat submitOnChain",
     "submitOnChain:localhost": "pnpm run submitOnChain",
     "submitOnChain:optimism-sepolia": "pnpm run submitOnChain --network optimism_sepolia",
+    "claim": "hardhat claim",
+    "claim:localhost": "pnpm run claim",
+    "claim:optimism-sepolia": "pnpm run claim --network optimism_sepolia",
     "upload-round-metadata": "ts-node ./scripts/uploadRoundMetadata.ts"
   },
   "dependencies": {

@@ -21,6 +21,7 @@ import {
   getEtherscanApiKeys,
   getNetworkRpcUrls,
 } from "./tasks/helpers/constants";
+import "./tasks/runner/claim";
 import "./tasks/runner/initPoll";
 import "./tasks/runner/merge";
 import "./tasks/runner/prove";
