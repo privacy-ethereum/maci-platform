@@ -150,6 +150,7 @@ contract Tally is TallyBase, IPayoutStrategy {
     if (amount == 0) {
       revert DepositMustBeGreaterThanZero();
     }
+
     emit Deposited(msg.sender, amount);
 
     token.safeTransferFrom(msg.sender, address(this), amount);
@@ -194,6 +195,10 @@ contract Tally is TallyBase, IPayoutStrategy {
     uint256 perVOSpentVoiceCreditsHash,
     uint8 voteOptionTreeDepth
   ) internal override {
+    uint256 previousValue = tallyResults[voteOptionIndex].value;
+
+    totalVotesSquares += tallyResult ** 2 - previousValue ** 2;
+
     super.addTallyResult(
       voteOptionIndex,
       tallyResult,
@@ -203,8 +208,6 @@ contract Tally is TallyBase, IPayoutStrategy {
       perVOSpentVoiceCreditsHash,
       voteOptionTreeDepth
     );
-
-    totalVotesSquares += tallyResult ** 2;
 
     emit ResultAdded(voteOptionIndex, tallyResult);
   }
