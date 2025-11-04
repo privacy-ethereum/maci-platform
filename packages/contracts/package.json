@@ -54,7 +54,10 @@
     "submitOnChain": "hardhat submitOnChain",
     "submitOnChain:localhost": "pnpm run submitOnChain",
     "submitOnChain:optimism-sepolia": "pnpm run submitOnChain --network optimism_sepolia",
-    "upload-round-metadata": "ts-node ./scripts/uploadRoundMetadata.ts"
+    "upload-round-metadata": "ts-node ./scripts/uploadRoundMetadata.ts",
+    "distribute": "hardhat distribute",
+    "distribute:localhost": "pnpm run distribute",
+    "distribute:optimism-sepolia": "pnpm run distribute --network optimism_sepolia"
   },
   "dependencies": {
     "@nomicfoundation/hardhat-ethers": "^3.0.8",
@@ -71,10 +74,12 @@
     "maci-core": "^2.5.0",
     "maci-crypto": "^2.5.0",
     "maci-domainobjs": "^2.5.0",
-    "solidity-docgen": "^0.6.0-beta.36"
+    "solidity-docgen": "^0.6.0-beta.36",
+    "zod": "3.24.1"
   },
   "devDependencies": {
     "@types/chai": "^4.3.11",
+    "@types/chai-as-promised": "^8.0.2",
     "@types/circomlibjs": "^0.1.6",
     "@types/lowdb": "^1.0.15",
     "@types/mocha": "^10.0.10",
@@ -82,6 +87,7 @@
     "@types/snarkjs": "^0.7.8",
     "@types/uuid": "^10.0.0",
     "chai": "^4.3.10",
+    "chai-as-promised": "^8.0.2",
     "hardhat-artifactor": "^0.2.0",
     "hardhat-contract-sizer": "^2.10.0",
     "sol2uml": "^2.5.20",
