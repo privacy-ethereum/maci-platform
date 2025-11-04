@@ -2,6 +2,8 @@ import { EDeploySteps as EMaciDeploySteps, EContracts as EMaciContracts } from "
 
 import type { BigNumberish } from "ethers";
 
+export type * from "./types";
+
 /**
  * Deploy steps for maci-platform related constacts
  */
