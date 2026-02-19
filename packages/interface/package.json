@@ -49,7 +49,7 @@
     "maci-cli": "^2.5.0",
     "maci-domainobjs": "^2.5.0",
     "maci-platform-contracts": "workspace:^0.1.0",
-    "next": "^14.1.0",
+    "next": "^15.5.10",
     "next-auth": "^4.24.11",
     "next-themes": "^0.4.3",
     "node-fetch-cache": "^5.0.2",
